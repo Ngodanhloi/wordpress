@@ -882,39 +882,16 @@ function twentytwenty_get_elements_array()
 	 */
 	return apply_filters('twentytwenty_get_elements_array', $elements);
 }
-function custom_comment_callback($comment, $args, $depth)
+function custom_enqueue_comment_styles()
 {
-	$tag = ('div' === $args['style']) ? 'div' : 'li';
+	// Đăng ký và đưa CSS vào hàng đợi.
+	// LƯU Ý: Đảm bảo file comment.css nằm trong thư mục gốc của theme (hoặc Child Theme).
 
-?>
-	<<?php echo $tag; ?> id="comment-<?php comment_ID(); ?>" <?php comment_class('card p-2 mt-3'); ?>>
-		<div class="d-flex">
-			<div>
-				<?php echo get_avatar($comment, 40); ?>
-			</div>
-			<div class="flex-grow-1 pl-2">
-				<h6 class="m-0 text-capitalize"><?php echo get_comment_author_link(); ?></h6>
-				<p class="small text-muted m-0"><?php echo human_time_diff(get_comment_time('U'), current_time('timestamp')) . ' ago'; ?></p>
-			</div>
-			<div>
-				<div class="dropdown">
-					<a href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						<i class="fas fa-chevron-down"></i>
-					</a>
-					<div class="dropdown-menu">
-						<?php edit_comment_link(__('Edit'), '<span class="dropdown-item">', '</span>'); ?>
-						<span class="dropdown-item text-danger">Delete</span>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="card-body p-0">
-			<?php if ($comment->comment_approved == '0') : ?>
-				<em class="comment-awaiting-moderation">Your comment is awaiting moderation.</em>
-			<?php endif; ?>
-			<p class="card-text h7 mb-1"><?php comment_text(); ?></p>
-			<a class="card-link small" href="#"><i class="far fa-thumbs-up"></i> Like</a>
-		</div>
-	</<?php echo $tag; ?>>
-<?php
+	wp_enqueue_style(
+		'custom-comment-style',
+		get_template_directory_uri() . '/comment.css',
+		array(),
+		'1.0'
+	);
 }
+add_action('wp_enqueue_scripts', 'custom_enqueue_comment_styles');
