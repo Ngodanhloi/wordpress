@@ -1,94 +1,87 @@
-<?php
-/**
- * The default template for displaying content
- *
- * Used for both singular and index.
- *
- * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
- *
- * @package WordPress
- * @subpackage Twenty_Twenty
- * @since Twenty Twenty 1.0
- */
+<article id="post-<?php the_ID(); ?>" <?php post_class('post-card d-flex'); ?>>
 
-?>
+	<!-- Ngày tháng bên trái -->
+	<div class="post-date text-primary fw-bold p-3 text-center">
+		<span class="day h3 d-block mb-1"><?php echo get_the_date('d'); ?></span>
+		<span class="month small text-uppercase d-block">Tháng <?php echo get_the_date('n'); ?></span>
+		<span class="year small d-block"><?php echo get_the_date('Y'); ?></span>
+	</div>
 
-<article <?php post_class(); ?> id="post-<?php the_ID(); ?>">
+	<!-- Nội dung bên phải -->
+	<div class="post-content p-3 d-flex flex-column">
+		<!-- Tiêu đề -->
+		<h2 class="post-title h4 mb-3">
+			<a href="<?php the_permalink(); ?>" class="text-dark fw-bold">
+				<?php the_title(); ?>
+			</a>
+		</h2>
 
-	<?php
-
-	get_template_part( 'template-parts/entry-header' );
-
-	if ( ! is_search() ) {
-		get_template_part( 'template-parts/featured-image' );
-	}
-
-	?>
-
-	<div class="post-inner <?php echo is_page_template( 'templates/template-full-width.php' ) ? '' : 'thin'; ?> ">
-
-		<div class="entry-content">
-
+		<!-- Nội dung -->
+		<div class="post-excerpt flex-grow-1 medium">
 			<?php
-			if ( is_search() || ! is_singular() && 'summary' === get_theme_mod( 'blog_content', 'full' ) ) {
-				the_excerpt();
+			if (is_single()) {
+				the_content(); // Khi vào trang chi tiết thì hiển thị full
 			} else {
-				the_content( __( 'Continue reading', 'twentytwenty' ) );
+				the_excerpt(); // Ở danh sách thì chỉ hiện ngắn
 			}
 			?>
+		</div>
 
-		</div><!-- .entry-content -->
 
-	</div><!-- .post-inner -->
+		<!-- Nút đọc thêm -->
+		<div class="mt-auto">
+			<a href="<?php the_permalink(); ?>" class="btn btn-outline-primary btn-md">Đọc tiếp</a>
+		</div>
+	</div>
+</article>
 
-	<div class="section-inner">
-		<?php
-		wp_link_pages(
-			array(
-				'before'      => '<nav class="post-nav-links bg-light-background" aria-label="' . esc_attr__( 'Page', 'twentytwenty' ) . '"><span class="label">' . __( 'Pages:', 'twentytwenty' ) . '</span>',
-				'after'       => '</nav>',
-				'link_before' => '<span class="page-number">',
-				'link_after'  => '</span>',
-			)
-		);
 
-		edit_post_link();
-
-		// Single bottom post meta.
-		twentytwenty_the_post_meta( get_the_ID(), 'single-bottom' );
-
-		if ( post_type_supports( get_post_type( get_the_ID() ), 'author' ) && is_single() ) {
-
-			get_template_part( 'template-parts/entry-author-bio' );
-
-		}
-		?>
-
-	</div><!-- .section-inner -->
-
-	<?php
-
-	if ( is_single() ) {
-
-		get_template_part( 'template-parts/navigation' );
-
+<style>
+	.post-card {
+		width: 100%;
+		/* Chiếm hết cột giữa */
+		margin: 0 0 1.5rem 0;
+		/* Chỉ margin-bottom */
+		background: #fff;
+		border-radius: 6px;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+		overflow: hidden;
+		display: flex;
 	}
 
-	/*
-	 * Output comments wrapper if it's a post, or if comments are open,
-	 * or if there's a comment number – and check for password.
-	 */
-	if ( ( is_single() || is_page() ) && ( comments_open() || get_comments_number() ) && ! post_password_required() ) {
-		?>
 
-		<div class="comments-wrapper section-inner">
-
-			<?php comments_template(); ?>
-
-		</div><!-- .comments-wrapper -->
-
-		<?php
+	/* Ngày tháng bên trái */
+	.post-date {
+		flex: 0 0 20%;
+		/* chiếm 20% chiều rộng */
+		max-width: 20%;
+		background: #f7f7f7;
+		/* nền nhạt cho nổi bật */
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
 	}
-	?>
 
-</article><!-- .post -->
+	/* Nội dung bên phải */
+	.post-content {
+		flex: 0 0 80%;
+		max-width: 80%;
+		display: flex;
+		flex-direction: column;
+	}
+
+	/* Chữ to hơn */
+	.post-date .day {
+		font-size: 2rem;
+		font-weight: bold;
+	}
+
+	.post-title {
+		font-size: 1.5rem;
+	}
+
+	.post-excerpt {
+		font-size: 1rem;
+	}
+</style>
