@@ -23,7 +23,11 @@ get_header();
 			while (have_posts()) : the_post(); ?>
 				<article class="single-post">
 					<div class="post-header">
+
+						<!-- 1. Tiêu đề bài viết (Đẩy sang trái) -->
 						<h1 class="post-title"><?php the_title(); ?></h1>
+
+						<!-- 2. Khối ngày tháng hình tròn (lớn, màu vàng - Đẩy sang phải) -->
 						<div class="post-meta">
 							<span class="post-date" aria-hidden="false">
 								<div class="date-inner">
@@ -32,6 +36,7 @@ get_header();
 										<span class="divider"></span>
 										<span class="month"><?php echo get_the_date('m'); ?></span>
 									</div>
+									<!-- Year được đặt ở đây và sẽ được định vị tuyệt đối bằng CSS -->
 									<span class="year"><?php echo get_the_date('y'); ?></span>
 								</div>
 							</span>
@@ -92,13 +97,61 @@ get_header();
 		?>
 	</aside>
 </div>
-</div>
 
 <!-- Phần điều hướng bài viết trước/sau -->
-<div class="below-layout-box">
+<div class="below-layout-box nav-section-box">
 	<div class="post-navigation">
-		<div class="prev"><?php previous_post_link('%link', '← Bài trước'); ?></div>
-		<div class="next"><?php next_post_link('%link', 'Bài sau →'); ?></div>
+		<div class="prev">
+			<?php
+			$prev_post = get_previous_post();
+			if ($prev_post) :
+				// Lấy thông tin ngày tháng
+				$prev_day = get_the_date('d', $prev_post->ID);
+				$prev_month = get_the_date('m', $prev_post->ID);
+				$prev_year = get_the_date('y', $prev_post->ID);
+			?>
+				<a href="<?php echo esc_url(get_permalink($prev_post->ID)); ?>" class="nav-post-link nav-prev-link">
+					<span class="nav-arrow">←</span>
+					<div class="nav-date-text">
+						<span class="nav-day-month-stacked">
+							<span class="nav-day"><?php echo $prev_day; ?></span>
+							<span class="nav-month"><?php echo $prev_month; ?></span>
+						</span>
+						<span class="nav-year-small"><?php echo $prev_year; ?></span>
+					</div>
+					<div class="nav-text-content">
+						<span class="nav-label">Previous post</span>
+						<span class="nav-title"><?php echo esc_html($prev_post->post_title); ?></span>
+					</div>
+				</a>
+			<?php endif; ?>
+		</div>
+
+		<div class="next">
+			<?php
+			$next_post = get_next_post();
+			if ($next_post) :
+				// Lấy thông tin ngày tháng
+				$next_day = get_the_date('d', $next_post->ID);
+				$next_month = get_the_date('m', $next_post->ID);
+				$next_year = get_the_date('y', $next_post->ID);
+			?>
+				<a href="<?php echo esc_url(get_permalink($next_post->ID)); ?>" class="nav-post-link nav-next-link">
+					<div class="nav-text-content">
+						<span class="nav-label">Next post →</span>
+						<span class="nav-title"><?php echo esc_html($next_post->post_title); ?></span>
+					</div>
+					<div class="nav-date-text">
+						<span class="nav-day-month-stacked">
+							<span class="nav-day"><?php echo $next_day; ?></span>
+							<span class="nav-month"><?php echo $next_month; ?></span>
+						</span>
+						<span class="nav-year-small"><?php echo $next_year; ?></span>
+					</div>
+					<span class="nav-arrow-end">→</span>
+				</a>
+			<?php endif; ?>
+		</div>
 	</div>
 </div>
 
@@ -137,18 +190,199 @@ get_header();
 	.below-layout-box {
 		max-width: 1200px;
 		margin: 20px auto 40px;
-		background: #fff;
 		border: 1px solid #ddd;
 		padding: 20px;
 		border-radius: 8px;
+	}
+
+	/* CẬP NHẬT CSS: Đặt màu nền xanh nhạt cho khối điều hướng */
+	.nav-section-box {
+		background: #E0F2F1;
+		/* Màu xanh lá/xanh lam nhạt */
+		border: none;
 	}
 
 	/* Tiêu đề và Navigation */
 	.post-navigation {
 		display: flex;
 		justify-content: space-between;
+		align-items: center;
 	}
 
+	/* Custom navigation style for below-layout-box */
+	.post-navigation .prev,
+	.post-navigation .next {
+		flex-basis: 48%;
+		padding: 0;
+		display: flex;
+	}
+
+	.post-navigation .next {
+		justify-content: flex-end;
+	}
+
+	.nav-post-link {
+		display: flex;
+		align-items: center;
+		text-decoration: none;
+		color: #333;
+		padding: 5px;
+		/* Tăng padding để tạo khoảng không hover */
+		border-radius: 4px;
+		/* Thêm bo góc */
+		transition: all 0.3s ease-in-out;
+		width: 100%;
+	}
+
+	/* HIỆU ỨNG HOVER ĐẸP HƠN */
+	.nav-post-link:hover {
+		background-color: #D3E0E2;
+		/* Nền tối hơn khi hover */
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		/* Đổ bóng nhẹ */
+		transform: translateY(-2px);
+		/* Nâng nhẹ */
+		color: #008888;
+	}
+
+	.nav-arrow,
+	.nav-arrow-end {
+		font-size: 1.5em;
+		font-weight: 900;
+		/* Dày hơn */
+		color: #00b3b3;
+		flex-shrink: 0;
+		transition: color 0.3s;
+	}
+
+	.nav-arrow {
+		padding-right: 10px;
+	}
+
+	.nav-arrow-end {
+		padding-left: 10px;
+	}
+
+	.nav-text-content {
+		display: flex;
+		flex-direction: column;
+		flex-grow: 1;
+		overflow: hidden;
+		/* THÊM margin để tách khối text khỏi khối date */
+		margin: 0 15px;
+	}
+
+	.nav-label {
+		font-size: 0.8em;
+		color: #00b3b3;
+		text-transform: uppercase;
+		font-weight: 700;
+		/* Đậm hơn */
+		margin-bottom: 3px;
+	}
+
+	.nav-title {
+		font-weight: 800;
+		/* Rất đậm */
+		font-size: 1.1em;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		color: #333;
+	}
+
+	/* CẬP NHẬT CSS CHO KHỐI NGÀY THÁNG MINI TRONG NAVIGATION (Nền VÀNG) */
+	.nav-date-text {
+		display: flex;
+		align-items: center;
+		flex-shrink: 0;
+		color: #333;
+		padding: 5px;
+
+		/* Nền Vàng */
+		border-radius: 4px;
+	}
+
+	.nav-day-month-stacked {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		font-weight: bold;
+		margin-right: 5px;
+	}
+
+	.nav-day-month-stacked .nav-day {
+		font-size: 1.2em;
+		border-bottom: 2px solid #333;
+		padding-bottom: 2px;
+		line-height: 1;
+	}
+
+	.nav-day-month-stacked .nav-month {
+		font-size: 0.8em;
+		line-height: 1;
+	}
+
+	.nav-year-small {
+		font-size: 0.7em;
+		align-self: center;
+		font-weight: bold;
+		color: #666;
+	}
+
+	/* Specific layout for Prev link (← DATE TITLE) */
+	.nav-prev-link {
+		justify-content: flex-start;
+		text-align: left;
+	}
+
+	/* ĐẢO NGƯỢC THỨ TỰ CHO PREV LINK: Arrow, Date, Content */
+	.nav-prev-link .nav-arrow {
+		order: 1;
+	}
+
+	.nav-prev-link .nav-date-text {
+		order: 2;
+	}
+
+	.nav-prev-link .nav-text-content {
+		order: 3;
+		text-align: left;
+		margin-left: 15px;
+		margin-right: 0;
+	}
+
+
+	/* Specific layout for Next link (TITLE DATE →) */
+	.nav-next-link {
+		justify-content: flex-end;
+		text-align: right;
+	}
+
+	/* THỨ TỰ CHO NEXT LINK: Content, Date, Arrow */
+	.nav-next-link .nav-text-content {
+		order: 1;
+		text-align: right;
+		margin-right: 15px;
+		margin-left: 0;
+	}
+
+	.nav-next-link .nav-date-text {
+		order: 2;
+	}
+
+	.nav-next-link .nav-arrow-end {
+		order: 3;
+	}
+
+	.nav-next-link .nav-label {
+		align-self: flex-end;
+	}
+
+
+	/* ----------------------------------------------------- */
+	/* --- KHỐI NGÀY THÁNG LỚN (CHI TIẾT BÀI VIẾT) --- */
+	/* ----------------------------------------------------- */
 	.sidebar-title {
 		font-size: 1.5em;
 		margin-bottom: 15px;
@@ -156,30 +390,33 @@ get_header();
 		padding-bottom: 5px;
 	}
 
-	/* ----------------------------------------------------- */
-	/* --- KHỐI NGÀY THÁNG LỚN (CHI TIẾT BÀI VIẾT) --- */
-	/* ----------------------------------------------------- */
 	.post-header {
 		border-bottom: 2px solid #ddd;
 		padding-bottom: 15px;
 		margin-bottom: 20px;
 		display: flex;
+		flex-direction: row;
 		align-items: center;
+		justify-content: space-between;
 		gap: 20px;
 	}
 
 	.single-post .post-title {
-		flex: 1;
+		flex-grow: 1;
+		order: 1;
 		font-size: 32px;
 		font-weight: bold;
 		color: #333;
 		margin: 0;
 	}
 
-	/* 1. Vòng tròn màu vàng (Position Context) */
+	.post-meta {
+		flex-shrink: 0;
+		order: 2;
+	}
+
 	.post-meta .post-date {
 		background-color: #FFCC00;
-		/* Màu vàng */
 		color: #333;
 		width: 90px;
 		height: 90px;
@@ -194,13 +431,10 @@ get_header();
 		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	}
 
-	/* ĐÃ CHỈNH SỬA: Dùng Flexbox cho khối date-inner */
 	.post-meta .post-date .date-inner {
 		display: flex;
-		flex-direction: row;
-		/* Xếp ngày/tháng và năm ngang hàng */
+		flex-direction: column;
 		align-items: center;
-		/* Căn giữa theo chiều dọc */
 		justify-content: center;
 	}
 
@@ -209,22 +443,19 @@ get_header();
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		/* ĐÃ CHỈNH SỬA: Giảm margin để số năm sát vào hơn */
-		margin-right: 0px;
+		margin-right: 15px;
 	}
 
 	.post-meta .post-date .day {
 		font-size: 26px;
 		line-height: 1;
 		border-bottom: 2px solid #222;
-		/* Dùng border thay cho text-decoration: underline */
 		padding-bottom: 2px;
 		margin-bottom: 2px;
 	}
 
 	.post-meta .post-date .divider {
 		display: none;
-		/* Ẩn divider cũ */
 	}
 
 	.post-meta .post-date .month {
@@ -233,17 +464,15 @@ get_header();
 		margin-top: 3px;
 	}
 
-	/* ĐÃ CHỈNH SỬA: Loại bỏ định vị tuyệt đối, chỉ cần margin-left */
 	.post-meta .post-date .year {
-		position: static;
-		/* Quan trọng: Đổi sang static để Flexbox hoạt động */
+		position: absolute;
 		font-size: 18px;
 		font-weight: bold;
 		line-height: 1;
-		/* Điều chỉnh khoảng cách ngang */
-		margin-left: 2px;
+		top: 50%;
+		right: 15px;
+		transform: translateY(-50%);
 	}
-
 
 	/* --- NỘI DUNG BÀI VIẾT & TÁC GIẢ --- */
 	.post-content {
@@ -262,29 +491,27 @@ get_header();
 		text-align: right;
 	}
 
+	/* ----------------------------------------------------- */
+	/* --- BÀI VIẾT GẦN ĐÂY (Recent Posts) --- */
+	/* ----------------------------------------------------- */
 	.right-sidebar .latest-post-item {
 		background-color: #00b3b3;
 		padding: 10px;
 		margin-bottom: 15px;
 		border-radius: 8px;
 		color: #fff;
-		/* Cập nhật transition mượt mà hơn */
 		transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 		display: flex;
 		align-items: center;
 		gap: 15px;
-		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-		/* Đổi shadow mặc định */
+
 		height: 60px;
 	}
 
 	.right-sidebar .latest-post-item:hover {
-		/* Nổi lên và trượt nhẹ lên trên */
 		transform: translateY(-3px) scale(1.01);
 		box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-		/* Shadow sâu hơn khi hover */
 		background-color: #009999;
-		/* Hơi tối màu khi hover */
 	}
 
 	/* Khối chứa Ngày Tháng Mini (Màu Vàng, Hình Tròn) */
@@ -295,16 +522,18 @@ get_header();
 		justify-content: center;
 		width: 50px;
 		height: 50px;
+
 		border-radius: 50%;
 		color: #333;
 		position: relative;
 		font-weight: bold;
-		/* Thêm shadow cho khối vàng */
+
 	}
 
+	/* Dùng Flexbox cho khối date-inner mini */
 	.right-sidebar .latest-date-inner {
 		display: flex;
-		flex-direction: column;
+		flex-direction: row;
 		align-items: center;
 		justify-content: center;
 	}
@@ -314,7 +543,7 @@ get_header();
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		margin-right: 8px;
+		margin-right: 0px;
 	}
 
 	.right-sidebar .latest-day {
@@ -329,18 +558,13 @@ get_header();
 		font-size: 10px;
 	}
 
-	/* Năm (Year) - Định vị tuyệt đối */
+	/* Loại bỏ định vị tuyệt đối, chỉ cần margin-left */
 	.right-sidebar .latest-year {
-		position: absolute;
+		position: static;
 		font-size: 10px;
-		top: 50%;
-		/* Đặt năm ở giữa chiều dọc */
-		right: 8px;
-		/* Điều chỉnh vị trí sang phải */
-		transform: translateY(-50%);
-		/* Dịch lên nửa chiều cao để căn giữa hoàn hảo */
 		font-weight: bold;
 		line-height: 1;
+		margin-left: 2px;
 	}
 
 	/* Khối chứa tiêu đề bài viết */
