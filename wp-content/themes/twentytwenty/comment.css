@@ -1,70 +1,109 @@
 /* =================================
-   Tùy chỉnh Form Bình luận thành Form Đăng bài (Make a Post)
+   Tùy chỉnh Form (Bản Mockup Word)
    ================================= */
 
-/* ẨN CÁC THÔNG BÁO THỪA TRÊN FORM */
-.comment-respond .logged-in-as,
-.comment-respond .comment-notes {
+/* ẨN CÁC THÔNG BÁO THỪA */
+body #respond .logged-in-as,
+body #respond .comment-notes {
     display: none;
 }
 
-/* CONTAINER CHÍNH CỦA FORM */
-.comment-respond {
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 6px;
+/* CONTAINER CHÍNH CỦA FORM
+ * Đây là NỀN XÁM (Lớp 2)
+ */
+/* CONTAINER CHÍNH CỦA FORM
+ * Đây là NỀN XÁM (Sửa lỗi căn giữa và xóa viền)
+ */
+/* CONTAINER CHÍNH CỦA FORM
+ * Đây là NỀN XÁM (Sửa lỗi xóa viền)
+ */
+body #respond {
+    background-color: #ededed !important;
 
-    /* ĐIỀU CHỈNH: Giới hạn chiều rộng */
+    /* ĐIỀU CHỈNH: Ép buộc không có viền */
+    border: 0 !important;
+    /* Đặt về 0px */
+    outline: none !important;
+    /* Đảm bảo không có outline */
+    box-shadow: none !important;
+    /* Đảm bảo không có box-shadow */
+
+    border-radius: 6px;
     max-width: 550px;
     width: 100%;
-
-    /* THÊM: Căn giữa khối */
-    margin: 0 auto;
-
-    padding: 0 15px 35px 15px;
-    /* Giữ padding dưới 35px cho nút lồi ra */
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    border-top: none;
-
+    box-sizing: border-box;
     position: relative;
+    padding: 15px 15px 65px 15px !important;
+
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
 }
 
-/* TIÊU ĐỀ FORM: 'Make a Post' (Tab) */
-.comment-respond #reply-title {
+/* TIÊU ĐỀ FORM: 'Make a Post'
+ * Đây là TAB MÀU TRẮNG (Lớp 1)
+ */
+/* TIÊU ĐỀ FORM: 'Make a Post'
+ * Đây là TAB MÀU TRẮNG (Lớp 1)
+ */
+body #respond #reply-title {
     text-align: left;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
     color: #333;
 
-    background-color: #ededed;
-    border: 1px solid #e0e0e0;
+    background-color: #ffffff !important;
+
+    border: 1px solid #e0e0e0 !important;
+    border-bottom: 1px solid #ffffff !important;
+    /* "Hàn" màu trắng */
+
     border-radius: 6px 6px 0 0;
-    display: inline-block;
     text-transform: none;
-    border-bottom: none;
 
-    margin: 0;
+    display: inline-block !important;
+
     position: relative;
-    top: -1px;
-
+    top: auto;
     padding: 8px 15px;
     z-index: 10;
+    /* Nằm trên */
+
+    /* ĐIỀU CHỈNH: Đẩy tab qua phải 15px */
+    left: 15px !important;
+
+    margin-left: 0;
+    margin-bottom: 0 !important;
 }
 
-/* KHUNG NHẬP LIỆU CHÍNH (Textarea) */
-.comment-respond textarea#comment {
+/* WRAPPER CỦA TEXTAREA */
+body #respond .comment-form-comment {
+    margin: 0;
+    padding: 0 !important;
+    /* Bỏ padding */
+}
+
+/* KHUNG NHẬP LIỆU CHÍNH
+ * Đây là KHUNG CHAT MÀU TRẮNG (Lớp 1)
+ */
+body #respond textarea#comment {
     width: 100%;
-
     border: 1px solid #e0e0e0;
-    border-radius: 4px;
 
+    background-color: #ffffff !important;
+
+    border-radius: 4px !important;
+
+    /* Kéo lên 1px để "hàn" vào tab title */
     margin-top: -1px;
     position: relative;
     z-index: 5;
+    /* Nằm dưới title */
 
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
+    /* "Hàn" góc trái-trên */
+    /* Reset góc phải-trên */
+    border-top-right-radius: 4px !important;
 
     padding: 10px;
     min-height: 120px;
@@ -74,17 +113,26 @@
     margin-bottom: 0;
 }
 
-/* CONTAINER CỦA NÚT SUBMIT */
-.comment-respond .form-submit {
+/* CONTAINER CỦA NÚT SUBMIT
+ * Nút "share" nằm trên nền xám
+ */
+body #respond .form-submit {
     display: block;
-    height: 0;
+    height: auto;
     overflow: visible;
     margin: 0;
-    padding: 0;
+
+    /* Định vị tuyệt đối ở góc phải dưới */
+    position: absolute !important;
+    bottom: 15px !important;
+    right: 15px !important;
+
+    padding: 0 !important;
+    text-align: right;
 }
 
 /* NÚT SUBMIT: 'share' */
-.comment-respond #submit {
+body #respond #submit {
     background-color: #0088ff;
     color: #ffffff;
     border: none;
@@ -95,13 +143,15 @@
     cursor: pointer;
     text-transform: lowercase;
 
-    /* ĐỊNH VỊ TUYỆT ĐỐI */
-    position: absolute;
-    right: 15px;
-    bottom: -15px;
-    z-index: 20;
+    position: static;
+    display: inline-block;
 }
 
-.comment-respond #submit:hover {
+body #respond #submit:hover {
     background-color: #0066cc;
+}
+
+/* Ẩn khung chat (form) nếu CHƯA đăng nhập */
+body:not(.logged-in) #respond {
+    display: none;
 }
