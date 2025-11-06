@@ -2,37 +2,89 @@
 
 <?php if (is_search()) : ?>
 
-	<!-- Trang kết quả tìm kiếm -->
-	<div class="kq-tim-kiem">
-		<div class="kq-tim-kiem-header">
-			<h2>Kết quả tìm kiếm cho: <span class="highlight">"<?php echo esc_html(get_search_query()); ?>"</span></h2>
-		</div>
+	<div class="main-content-grid">
+		<?php // 
+		?>
 
-		<div class="ket-qua">
-			<?php if (have_posts()) : ?>
-				<?php while (have_posts()) : the_post(); ?>
-					<article class="bai-tim-kiem">
-						<h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
-						<p><?php echo wp_trim_words(get_the_excerpt(), 25); ?></p>
-					</article>
-				<?php endwhile; ?>
+		<aside class="left-sidebar-custom">
+			<h3 class="sidebar-title">Bài viết mới nhất</h3>
+			<ul class="recent-posts-list">
+				<?php
+				// Tạo một vòng lặp (Query) mới để lấy 3 bài mới nhất
+				$args_moi = array(
+					'posts_per_page' => 3,
+					'ignore_sticky_posts' => 1
+				);
+				$query_moi = new WP_Query($args_moi);
+				if ($query_moi->have_posts()) :
+					while ($query_moi->have_posts()) : $query_moi->the_post();
+				?>
+						<li>
+							<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+						</li>
+				<?php
+					endwhile;
+					wp_reset_postdata(); // else :
+					echo '<li>Không có bài viết mới.</li>';
+				endif;
+				?>
+			</ul>
+		</aside>
 
-				<div class="phan-trang">
-					<?php the_posts_pagination(array(
-						'mid_size'  => 2,
-						'prev_text' => __('« Trước', 'textdomain'),
-						'next_text' => __('Sau »', 'textdomain'),
-					)); ?>
+		<main class="middle-content">
+
+			<?php // 
+			?>
+			<div class="kq-tim-kiem">
+				<div class="kq-tim-kiem-header">
+					<h2>Kết quả tìm kiếm cho: <span class="highlight">"<?php echo esc_html(get_search_query()); ?>"</span></h2>
 				</div>
-			<?php else : ?>
-				<div class="khong-tim-thay">
-					<p>Không tìm thấy kết quả nào cho từ khóa này.</p>
-					<p>Thử tìm lại với từ khóa khác:</p>
-					<?php get_search_form(); ?>
-				</div>
-			<?php endif; ?>
-		</div>
-	</div>
+
+				<div class="ket-qua">
+					<?php if (have_posts()) : ?>
+						<?php while (have_posts()) : the_post(); ?>
+							<article class="bai-tim-kiem">
+								<?php
+								if (has_post_thumbnail()) : ?>
+									<div class="anh-dai-dien">
+										<a href="<?php the_permalink(); ?>">
+											<?php the_post_thumbnail('medium'); ?>
+										</a>
+									</div>
+								<?php endif; ?>
+								<h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
+								<p><?php echo wp_trim_words(get_the_excerpt(), 25); ?></p>
+							</article>
+						<?php endwhile; ?>
+					<?php else : ?>
+						<div class="khong-tim-thay">
+							<p>Không tìm thấy kết quả nào cho từ khóa này.</p>
+							<p>Thử tìm lại với từ khóa khác:</p>
+							<?php get_search_form(); ?>
+						</div>
+					<?php endif; ?>
+				</div> <?php
+						if (have_posts()) : ?>
+					<div class="phan-trang">
+						<?php the_posts_pagination(array(
+								'mid_size'  => 2,
+								'prev_text' => __('« Trước', 'textdomain'),
+								'next_text' => __('Sau »', 'textdomain'),
+							)); ?>
+					</div>
+				<?php endif; ?>
+
+			</div>
+		</main>
+
+		<aside class="right-sidebar-empty">
+			<?php // 
+			?>
+		</aside>
+
+	</div> <?php // 
+			?>
+
 
 <?php else : ?>
 
@@ -107,64 +159,6 @@
 
 <style>
 	/* ====== Trang tìm kiếm ====== */
-	.kq-tim-kiem {
-		max-width: 1000px;
-		margin: 30px auto;
-		background: #fff;
-		padding: 20px 30px;
-		border-radius: 10px;
-		border: 1px solid #ddd;
-	}
-
-	.kq-tim-kiem-header {
-		text-align: center;
-		margin-bottom: 25px;
-		padding-bottom: 10px;
-		border-bottom: 2px solid #eee;
-	}
-
-	.kq-tim-kiem-header h2 {
-		font-size: 24px;
-		color: #333;
-		font-weight: 600;
-	}
-
-	.highlight {
-		color: #0073aa;
-	}
-
-	.bai-tim-kiem {
-		padding: 15px 0;
-		border-bottom: 1px solid #eee;
-	}
-
-	.bai-tim-kiem h3 {
-		margin: 0 0 8px;
-		font-size: 18px;
-	}
-
-	.bai-tim-kiem h3 a {
-		color: #0073aa;
-		text-decoration: none;
-	}
-
-	.bai-tim-kiem p {
-		color: #555;
-		font-size: 15px;
-		margin: 0;
-	}
-
-	.khong-tim-thay {
-		text-align: center;
-		padding: 30px;
-		background: #f9f9f9;
-		border-radius: 8px;
-	}
-
-	.phan-trang {
-		margin-top: 20px;
-		text-align: center;
-	}
 
 	/* ====== Trang chủ ====== */
 	.trang-chu {
@@ -305,6 +299,81 @@
 		font-size: 0.95em;
 		color: #777;
 		/* Màu xám nhạt hơn */
+	}
+
+	/* Áp dụng cho cả 3 cột */
+	/* ---- BỐ CỤC 3 CỘT MỚI CHO TRANG TÌM KIẾM ---- */
+
+	.ket-qua {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 20px;
+	}
+
+	.bai-tim-kiem h3 a {
+		color: #0073aa;
+		text-decoration: underline;
+		/* <-- SỬA THÀNH 'underline' */
+	}
+
+	.main-content-grid {
+		display: grid;
+		/* Chia 3 cột: 1fr = 25%, 2fr = 50% */
+		grid-template-columns: 1fr 2fr 1fr;
+		gap: 20px;
+		max-width: 1200px;
+		/* Giống trang chủ */
+		margin: 20px auto;
+		/* Giống trang chủ */
+	}
+
+	/* CSS cho cột trái mới (bài viết mới) */
+	.left-sidebar-custom {
+		background: #fff;
+		border: 1px solid #ddd;
+		padding: 15px;
+		border-radius: 8px;
+	}
+
+	.left-sidebar-custom .sidebar-title {
+		font-size: 1.2em;
+		font-weight: bold;
+		color: #333;
+		margin-top: 0;
+		text-transform: uppercase;
+		border-bottom: 3px solid #000;
+		padding-bottom: 10px;
+		margin-bottom: 15px;
+		width: fit-content;
+	}
+
+	.left-sidebar-custom .recent-posts-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	.left-sidebar-custom .recent-posts-list li {
+		padding: 8px 0;
+		border-bottom: 1px solid #eee;
+	}
+
+	.left-sidebar-custom .recent-posts-list li:last-child {
+		border-bottom: none;
+	}
+
+	.left-sidebar-custom .recent-posts-list a {
+		text-decoration: none;
+		color: #0073aa;
+		font-weight: 500;
+	}
+
+	/* CSS cho khối .kq-tim-kiem (bỏ viền/nền bên ngoài) */
+	.main-content-grid .kq-tim-kiem {
+		margin: 0;
+		padding: 0;
+		border: none;
+		background: none;
 	}
 </style>
 
