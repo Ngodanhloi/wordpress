@@ -99,7 +99,7 @@ get_header();
 </div>
 
 <!-- Phần điều hướng bài viết trước/sau (GỌI TEMPLATE MỚI) -->
-<?php get_template_part('navigation'); ?>
+<?php get_template_part('template-parts/navigation'); ?>
 
 <!-- Phần bình luận -->
 <div class="">
