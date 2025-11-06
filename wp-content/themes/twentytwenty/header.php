@@ -271,8 +271,7 @@
 			</div>
 
 			<nav class="custom-nav-main">
-				<a href="#" class="custom-nav-item custom-active">Home</a>
-			</nav>
+			<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="custom-nav-item custom-active">Home</a>			</nav>
 
 			<div class="custom-search-inline">
 				<form role="search" method="get" class="custom-search-form" action="<?php echo esc_url(home_url('/')); ?>">
