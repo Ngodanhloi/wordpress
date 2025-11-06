@@ -76,17 +76,29 @@
 				'number' => 5,
 				'status' => 'approve',
 			));
-			if ($binh_luan_moi) :
-				foreach ($binh_luan_moi as $bl) :
+
+			if ($binh_luan_moi) {
+
+				echo '<ul class="comment-list">';
+
+				foreach ($binh_luan_moi as $bl) {
 					$link_binh_luan = get_comment_link($bl->comment_ID);
-					echo '<div class="binh-luan-moi">';
-					echo '<a href="' . esc_url($link_binh_luan) . '">' . esc_html(get_the_title($bl->comment_post_ID)) . '</a>';
-					echo '<span class="tac-gia"> - ' . esc_html($bl->comment_author) . '</span>';
-					echo '</div>';
-				endforeach;
-			else :
+
+					$comment_snippet = wp_trim_words($bl->comment_content, 10, '...');
+
+					echo '<li class="binh-luan-moi">';
+
+					echo '<a href="' . esc_url($link_binh_luan) . '">' . esc_html($comment_snippet) . '</a>';
+
+
+					echo '</li>';
+				}
+
+				echo '</ul>';
+			} else {
+
 				echo '<p>Chưa có bình luận nào.</p>';
-			endif;
+			}
 			?>
 		</aside>
 	</div>
@@ -195,6 +207,104 @@
 		.trang-chu {
 			grid-template-columns: 1fr;
 		}
+	}
+
+	/* 1. KHUNG XÁM BÊN NGOÀI (ASIDE.COT-PHAI) */
+	/* ---- CSS MỚI CHO "BÌNH LUẬN GẦN ĐÂY" (GIỐNG DANH MỤC) ---- */
+
+	/* 1. XÓA NỀN XÁM (NẾU CÓ) */
+	.cot-phai .comment-list {
+		background-color: transparent;
+		border: none;
+		list-style: none;
+
+		/* HAI DÒNG NÀY SẼ SỬA LỖI BỊ THỤT VÀO:
+    */
+		padding: 0;
+		margin: 0;
+	}
+
+	/* 2. TIÊU ĐỀ (Giống "DANH MỤC") */
+	.cot-phai .tieu-de-cot {
+		font-size: 1.2em;
+		font-weight: bold;
+		color: #333;
+		margin-top: 0;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+
+		/* GẠCH CHÂN ĐEN DÀY */
+		border-bottom: 3px solid #000;
+		padding-bottom: 10px;
+		margin-bottom: 15px;
+		width: fit-content;
+		margin-left: 0;
+		margin-right: auto;
+	}
+
+	/* 3. KHUNG DANH SÁCH (UL.COMMENT-LIST) */
+	.cot-phai .comment-list {
+		background-color: transparent;
+		/* Xóa nền trắng */
+		border: none;
+		/* Xóa viền trắng */
+		padding: 0;
+		list-style: none;
+		margin: 0;
+	}
+
+	/* 4. MỖI MỤC BÌNH LUẬN (LI) */
+	.cot-phai .comment-list li.binh-luan-moi {
+		position: relative;
+		padding-left: 20px;
+		/* Khoảng trống cho dấu » */
+
+		/* Gạch chân mỏng */
+		border-bottom: 1px solid #eee;
+
+		padding-top: 10px;
+		padding-bottom: 10px;
+		margin: 0;
+	}
+
+	/* 5. XÓA GẠCH CHÂN MỤC CUỐI */
+	.cot-phai .comment-list li.binh-luan-moi:last-child {
+		border-bottom: none;
+		padding-bottom: 0;
+	}
+
+	/* 6. DẤU » TÙY CHỈNH (Giống "Danh mục") */
+	.cot-phai .comment-list li.binh-luan-moi:before {
+		/* Dùng dấu chevron » */
+		color: #555;
+		font-size: 1.2em;
+		font-weight: bold;
+		position: absolute;
+		left: 0;
+		top: 10px;
+		/* Căn chỉnh dấu » */
+		line-height: 1;
+	}
+
+	/* 7. LIÊN KẾT (A) BÊN TRONG */
+	.cot-phai .comment-list li a {
+		text-decoration: none;
+		color: #333;
+		/* Màu chữ đậm */
+		font-size: 0.95em;
+		font-weight: 500;
+	}
+
+	/* 8. HIỆU ỨNG HOVER */
+	.cot-phai .comment-list li a:hover {
+		color: #0073aa;
+	}
+
+	/* 9. TÁC GIẢ (SPAN.TAC-GIA) */
+	.cot-phai .comment-list .tac-gia {
+		font-size: 0.95em;
+		color: #777;
+		/* Màu xám nhạt hơn */
 	}
 </style>
 
