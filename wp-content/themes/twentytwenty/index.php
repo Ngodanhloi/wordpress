@@ -1,5 +1,5 @@
 <?php get_header(); ?>
-
+<?php get_search_form(); ?>
 <?php if (is_search()) : ?>
 
 	<div class="main-content-grid">
