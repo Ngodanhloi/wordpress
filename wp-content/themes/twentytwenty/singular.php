@@ -1,3 +1,4 @@
+
 <?php
 get_header();
 ?>
@@ -201,15 +202,9 @@ get_header();
 
 	.post-meta .post-date .date-inner {
 		display: flex;
-		flex-direction: row;
-		/* Đổi thành 'row' */
+		flex-direction: column;
 		align-items: center;
-		/* Căn giữa theo chiều dọc */
 		justify-content: center;
-		/* Căn giữa theo chiều ngang */
-		gap: 5px;
-		/* Thêm một khoảng cách nhỏ giữa 2 khối */
-		width: 100%;
 	}
 
 	.post-meta .post-date .day-month {
@@ -217,57 +212,35 @@ get_header();
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		margin-right: 0;
-		/* Bỏ margin-right: 15px */
+		margin-right: 15px;
 	}
 
-	/* ✅ ĐIỀU CHỈNH: Ngày (day) */
-	/*
- * Cho gạch chân mỏng hơn và chữ to hơn một chút.
- */
 	.post-meta .post-date .day {
-		font-size: 28px;
-		/* Tăng kích cỡ */
+		font-size: 26px;
 		line-height: 1;
-		border-bottom: 1px solid #222;
-		/* Gạch mỏng hơn */
+		border-bottom: 2px solid #222;
 		padding-bottom: 2px;
 		margin-bottom: 2px;
 	}
 
-	/* (Class .divider không đổi, vẫn display: none) */
 	.post-meta .post-date .divider {
 		display: none;
 	}
 
-	/* ✅ ĐIỀU CHỈNH: Tháng (month) */
-	/*
- * Cho cỡ chữ to hơn một chút và kéo gần 'Ngày' hơn.
- */
 	.post-meta .post-date .month {
-		font-size: 18px;
-		/* Tăng kích cỡ */
+		font-size: 16px;
 		line-height: 1;
-		margin-top: 2px;
-		/* Giảm margin-top */
+		margin-top: 3px;
 	}
 
-	/* ✅ ĐIỀU CHỈNH: Năm (year) */
-	/*
- * Bỏ hoàn toàn 'position: absolute'
- * và để nó tự căn giữa theo 'date-inner'.
- */
 	.post-meta .post-date .year {
-		position: static;
-		/* Quan trọng: Bỏ absolute */
-		font-size: 20px;
-		/* Đồng bộ 1 chút */
+		position: absolute;
+		font-size: 18px;
 		font-weight: bold;
 		line-height: 1;
-		transform: none;
-		/* Bỏ transform */
-
-		/* Không cần top, right, hay transform nữa */
+		top: 50%;
+		right: 15px;
+		transform: translateY(-50%);
 	}
 
 	/* --- NỘI DUNG BÀI VIẾT & TÁC GIẢ --- */
@@ -420,6 +393,102 @@ get_header();
 		.post-meta {
 			margin-bottom: 15px;
 		}
+	}
+
+	/* ====== CSS THEO PHÁC HỌA (Khung trắng bên trong) ====== */
+
+	/* 1. KHU VỰC SIDEBAR BÊN NGOÀI
+ * Chỉ làm nền xám và tạo khoảng đệm.
+ */
+	.left-sidebar {
+		background-color: #f8f8f8;
+		/* NỀN XÁM NHẠT (như phác họa) */
+		padding: 15px;
+		/* Đệm xung quanh để hở khung trắng bên trong */
+		width: 250px;
+		margin-bottom: 20px;
+		border-radius: 5px;
+		/* Bo góc cho khu vực xám */
+	}
+
+	/* 2. TIÊU ĐỀ "CATEGORIES"
+ * Vẫn giữ nguyên, nằm trên khung trắng.
+ */
+	.left-sidebar .sidebar-title {
+		font-size: 1.2em;
+		font-weight: bold;
+		color: #333;
+		margin-top: 0;
+		margin-bottom: 15px;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+		padding-left: 5px;
+		/* Thêm đệm trái 1 chút cho đẹp */
+	}
+
+	/* 3. KHUNG TRẮNG (UL.CATEGORY-LIST)
+ * Đây là cái khung trắng bạn vẽ.
+ */
+	.left-sidebar .category-list {
+		background-color: #ffffff;
+		/* NỀN TRẮNG */
+		border: 1px solid #e0e0e0;
+		/* VIỀN KHUNG */
+		border-radius: 4px;
+		/* Bo góc cho khung trắng */
+		padding: 15px 15px 5px 15px;
+		/* Đệm bên trong khung trắng */
+		/* (padding-bottom 5px vì mục cuối đã có margin 10px) */
+
+		list-style: none;
+		/* Xóa dấu chấm mặc định */
+		margin: 0;
+	}
+
+	/* 4. MỖI MỤC DANH MỤC (LI)
+ * Nằm bên trong khung trắng, có gạch chân.
+ */
+	.left-sidebar .category-list li {
+		position: relative;
+		padding-left: 18px;
+		/* Khoảng trống cho dấu chấm */
+
+		border-bottom: 1px solid #eee;
+		/* Gạch chân dưới MỖI mục */
+		padding-bottom: 10px;
+		margin-bottom: 10px;
+	}
+
+	/* 5. XÓA GẠCH CHÂN CHO MỤC CUỐI CÙNG */
+	.left-sidebar .category-list li:last-child {
+		border-bottom: none;
+		margin-bottom: 0;
+		padding-bottom: 0;
+	}
+
+	/* 6. DẤU CHẤM TÙY CHỈNH */
+	.left-sidebar .category-list li:before {
+		content: "\2022";
+		color: #888;
+		font-size: 1.2em;
+		position: absolute;
+		left: 0;
+		top: 0;
+		line-height: inherit;
+	}
+
+	/* 7. LIÊN KẾT (A) */
+	.left-sidebar .category-list li a {
+		text-decoration: none;
+		color: #555;
+		font-size: 0.95em;
+		transition: color 0.3s ease;
+		display: block;
+	}
+
+	/* 8. HIỆU ỨNG HOVER */
+	.left-sidebar .category-list li a:hover {
+		color: #0073aa;
 	}
 </style>
 
