@@ -1,7 +1,7 @@
 <?php get_header(); ?>
 
 <?php if (is_search()) : ?>
-
+	<?php get_search_form(); ?>
 	<div class="main-content-grid">
 		<?php // 
 		?>
@@ -86,6 +86,47 @@
 			?>
 
 
+	<!-- ========== BÀI VIẾT MỚI NHẤT (NÂNG CẤP) ========== -->
+	<div class="bai-viet-moi-duoi">
+
+		<div class="bai-viet-moi-content-wrapper">
+			<h3 class="sidebar-title">Bài viết mới nhất</h3>
+			<ul class="recent-posts-list">
+				<?php
+				// ... (Toàn bộ code vòng lặp while của bạn y hệt như cũ) ...
+				$args_moi_duoi = array(
+					'posts_per_page' => 3,
+					'ignore_sticky_posts' => 1
+				);
+				$query_moi_duoi = new WP_Query($args_moi_duoi);
+
+				if ($query_moi_duoi->have_posts()) :
+					while ($query_moi_duoi->have_posts()) : $query_moi_duoi->the_post();
+				?>
+						<li class="news-item">
+
+							<div class="news-header">
+								<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+								<span class="news-date"><?php echo get_the_date('j F, Y'); ?></span>
+							</div>
+
+							<div class="news-excerpt">
+								<?php echo wp_trim_words(get_the_excerpt(), 30, '...'); ?>
+							</div>
+
+						</li>
+				<?php
+					endwhile;
+					wp_reset_postdata();
+				else :
+					echo '<li>Không có bài viết mới.</li>';
+				endif;
+				?>
+			</ul>
+		</div>
+	</div>
+	<!-- ========== HẾT PHẦN NÂNG CẤP ========== -->
+
 <?php else : ?>
 
 	<!-- Trang chủ -->
@@ -153,6 +194,7 @@
 			}
 			?>
 		</aside>
+
 	</div>
 
 <?php endif; ?>
@@ -374,6 +416,136 @@
 		padding: 0;
 		border: none;
 		background: none;
+	}
+
+	/* ---- CSS MỚI CHO BÀI VIẾT MỚI (GIỐNG ẢNH) ---- */
+
+	/* 1. KHUNG BỌC NGOÀI */
+	.bai-viet-moi-duoi {
+		margin-top: 30px;
+		padding-top: 20px;
+		border-top: 2px solid #eee;
+		display: grid;
+		grid-template-columns: 1fr 2fr 1fr;
+		/* Cột 1 (trống) | Cột 2 (giữa) | Cột 3 (trống) */
+		gap: 20px;
+		/* Khoảng cách giữa các cột (tùy chọn) */
+		/* Gạch phân cách mỏng */
+	}
+
+	.bai-viet-moi-duoi .bai-viet-moi-content-wrapper {
+		grid-column: 2 / 3;
+		display: grid;
+		grid-template-columns: 1fr 2fr;
+		gap: 25px;
+		align-items: baseline;
+	}
+
+
+	/* 2. TIÊU ĐỀ "Bài viết mới nhất" */
+	.bai-viet-moi-duoi .sidebar-title {
+		font-size: 1.4em;
+		/* Chữ to hơn */
+		font-weight: bold;
+		color: #333;
+		margin-top: 0;
+		margin-bottom: 20px;
+		width: 100%;
+		/* Bỏ width: fit-content */
+		border-bottom: none;
+		/* Bỏ gạch chân */
+		font-size: 1.4em;
+		font-weight: bold;
+	}
+
+	/* 3. DANH SÁCH UL */
+	.bai-viet-moi-duoi .recent-posts-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	/* 4. MỖI MỤC BÀI VIẾT (LI) */
+	.bai-viet-moi-duoi .news-item {
+		position: relative;
+		padding-left: 25px;
+		/* Khoảng trống cho vòng tròn */
+		margin-bottom: 25px;
+		/* Khoảng cách giữa các bài */
+		border-bottom: none;
+		/* Bỏ gạch chân cũ */
+	}
+
+	/* 5. VÒNG TRÒN MÀU XANH (::before) */
+	.bai-viet-moi-duoi .news-item::before {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: -3px;
+		/* Căn vòng tròn với dòng title */
+
+		width: 14px;
+		height: 14px;
+		background-color: #fff;
+		border: 3px solid #3498db;
+		/* Màu xanh da trời */
+		border-radius: 50%;
+		box-sizing: border-box;
+		z-index: 1;
+	}
+
+	/* NỐI CÁC HÌNH TRÒN BẰNG ĐƯỜNG THẲNG ĐỨNG */
+	.news-item::after {
+		content: '';
+		position: absolute;
+		left: 6px;
+		top: -15px;
+		bottom: -22px;
+		width: 2px;
+		background-color: #ddd;
+		z-index: 0;
+	}
+
+	/* 6. HEADER CỦA BÀI VIẾT (Chứa Title và Date) */
+	.bai-viet-moi-duoi .news-header {
+		overflow: hidden;
+		/* Để xử lý float */
+		margin-bottom: 5px;
+		line-height: 1.3;
+	}
+
+	/* 7. TIÊU ĐỀ BÀI VIẾT (A) */
+	.bai-viet-moi-duoi .news-header a {
+		text-decoration: none;
+		color: #0073aa;
+		/* Màu xanh cho link */
+		font-weight: bold;
+		font-size: 1.1em;
+		float: left;
+		/* Đẩy title sang trái */
+	}
+
+	.bai-viet-moi-duoi .news-header a:hover {
+		text-decoration: underline;
+	}
+
+	/* 8. NGÀY ĐĂNG (SPAN) */
+	.bai-viet-moi-duoi .news-date {
+		float: right;
+		/* Đẩy ngày sang phải */
+		color: #999;
+		font-size: 0.9em;
+		padding-top: 2px;
+		/* Căn chỉnh với title */
+	}
+
+	/* 9. NỘI DUNG RÚT GỌN (EXCERPT) */
+	.bai-viet-moi-duoi .news-excerpt {
+		color: #555;
+		font-size: 0.95em;
+		line-height: 1.6;
+		clear: both;
+		/* Đảm bảo nó nằm dưới cả title và date */
 	}
 </style>
 
