@@ -1,4 +1,3 @@
-
 <?php
 get_header();
 ?>
@@ -126,12 +125,21 @@ get_header();
 	}
 
 	.left-sidebar,
-	.right-sidebar,
 	.content-area {
 		background: #fff;
 		border: 1px solid #ddd;
 		padding: 15px;
 		border-radius: 8px;
+	}
+
+	.right-sidebar {
+		background: #00b3b3;
+		/* <-- NỀN XANH CHO CẢ CỘT */
+		border: 1px solid #00b3b3;
+		padding: 15px;
+		border-radius: 8px;
+		color: #fff;
+		/* <-- Chữ mặc định trong cột là màu trắng */
 	}
 
 	.below-layout-box {
@@ -293,7 +301,7 @@ get_header();
 		height: 50px;
 
 		border-radius: 50%;
-		color: #333;
+		color: #fff;
 		position: relative;
 		font-weight: bold;
 
@@ -318,7 +326,7 @@ get_header();
 	.right-sidebar .latest-day {
 		font-size: 16px;
 		line-height: 1;
-		border-bottom: 1px solid #222;
+		border-bottom: 1px solid #fff;
 		padding-bottom: 1px;
 		margin-bottom: 1px;
 	}
