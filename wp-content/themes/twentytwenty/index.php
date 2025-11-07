@@ -1,7 +1,6 @@
 <?php get_header(); ?>
 
 <?php if (is_search()) : ?>
-	<?php get_search_form(); ?>
 	<div class="main-content-grid">
 		<?php // 
 		?>
