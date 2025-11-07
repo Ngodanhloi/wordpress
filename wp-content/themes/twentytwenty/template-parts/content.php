@@ -37,51 +37,66 @@
 
 
 <style>
-	.post-card {
-		width: 100%;
-		/* Chiếm hết cột giữa */
-		margin: 0 0 1.5rem 0;
-		/* Chỉ margin-bottom */
-		background: #fff;
-		border-radius: 6px;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-		overflow: hidden;
-		display: flex;
-	}
+    .post-card {
+        width: 100%;
+        margin: 0 0 1.5rem 0;
+        background: #fff;
+        border-radius: 6px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        display: flex;
+    }
+
+    /* Ngày tháng bên trái */
+    .post-date {
+        flex: 0 0 20%;
+        max-width: 20%;
+        /* XÓA NỀN XÁM */
+        background: none; /* Hoặc background-color: transparent; */
+        
+        /* THÊM ĐƯỜNG KẺ PHÂN CÁCH */
+        border-right: 1px solid #e0e0e0; /* Đường kẻ dọc màu xám nhạt */
+        
+        /* ĐIỀU CHỈNH KHOẢNG ĐỆM */
+        padding: 1.5rem 1rem; /* Thay đổi padding cho cân đối hơn */
+        
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        
+        /* Tùy chỉnh màu chữ nếu cần để nổi bật trên nền trắng */
+        color: #555; /* Ví dụ: màu xám đậm hơn */
+    }
+
+    /* Nội dung bên phải */
+    .post-content {
+        flex: 0 0 80%;
+        max-width: 80%;
+        display: flex;
+        flex-direction: column;
+        padding: 1.5rem; /* Đảm bảo padding nhất quán với post-date mới */
+    }
+
+    /* Chữ to hơn */
+    .post-date .day {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #333; /* Đảm bảo màu chữ rõ ràng trên nền trắng */
+    }
+
+    .post-date .month,
+    .post-date .year {
+        color: #777; /* Màu nhạt hơn cho tháng và năm */
+    }
 
 
-	/* Ngày tháng bên trái */
-	.post-date {
-		flex: 0 0 20%;
-		/* chiếm 20% chiều rộng */
-		max-width: 20%;
-		background: #f7f7f7;
-		/* nền nhạt cho nổi bật */
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-	}
+    .post-title {
+        font-size: 1.5rem;
+    }
 
-	/* Nội dung bên phải */
-	.post-content {
-		flex: 0 0 80%;
-		max-width: 80%;
-		display: flex;
-		flex-direction: column;
-	}
-
-	/* Chữ to hơn */
-	.post-date .day {
-		font-size: 2rem;
-		font-weight: bold;
-	}
-
-	.post-title {
-		font-size: 1.5rem;
-	}
-
-	.post-excerpt {
-		font-size: 1rem;
-	}
+    .post-excerpt {
+        font-size: 1rem;
+    }
+</style>
 </style>

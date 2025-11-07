@@ -32,49 +32,53 @@
 
 		<main class="middle-content">
 
-			<?php // 
-			?>
-			<div class="kq-tim-kiem">
-				<div class="kq-tim-kiem-header">
-					<h2>Kết quả tìm kiếm cho: <span class="highlight">"<?php echo esc_html(get_search_query()); ?>"</span></h2>
-				</div>
+    <div class="kq-tim-kiem">
 
-				<div class="ket-qua">
-					<?php if (have_posts()) : ?>
-						<?php while (have_posts()) : the_post(); ?>
-							<article class="bai-tim-kiem">
-								<?php
-								if (has_post_thumbnail()) : ?>
-									<div class="anh-dai-dien">
-										<a href="<?php the_permalink(); ?>">
-											<?php the_post_thumbnail('medium'); ?>
-										</a>
-									</div>
-								<?php endif; ?>
-								<h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
-								<p><?php echo wp_trim_words(get_the_excerpt(), 25); ?></p>
-							</article>
-						<?php endwhile; ?>
-					<?php else : ?>
-						<div class="khong-tim-thay">
-							<p>Không tìm thấy kết quả nào cho từ khóa này.</p>
-							<p>Thử tìm lại với từ khóa khác:</p>
-							<?php get_search_form(); ?>
-						</div>
-					<?php endif; ?>
-				</div> <?php
-						if (have_posts()) : ?>
-					<div class="phan-trang">
-						<?php the_posts_pagination(array(
-								'mid_size'  => 2,
-								'prev_text' => __('« Trước', 'textdomain'),
-								'next_text' => __('Sau »', 'textdomain'),
-							)); ?>
-					</div>
-				<?php endif; ?>
+        <?php if (have_posts()) : ?>
 
-			</div>
-		</main>
+            <div class="kq-tim-kiem-header">
+                <h2>Kết quả tìm kiếm cho: <span class="highlight">"<?php echo esc_html(get_search_query()); ?>"</span></h2>
+            </div>
+
+            <div class="ket-qua">
+                <?php while (have_posts()) : the_post(); ?>
+                    <article class="bai-tim-kiem">
+                        <?php
+                        if (has_post_thumbnail()) : ?>
+                            <div class="anh-dai-dien">
+                                <a href="<?php the_permalink(); ?>">
+                                    <?php the_post_thumbnail('medium'); ?>
+                                </a>
+                            </div>
+                        <?php endif; ?>
+                        <h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
+                        <p><?php echo wp_trim_words(get_the_excerpt(), 25); ?></p>
+                    </article>
+                <?php endwhile; ?>
+            </div> <div class="phan-trang">
+                <?php the_posts_pagination(array(
+                    'mid_size'  => 2,
+                    'prev_text' => __('« Trước', 'textdomain'),
+                    'next_text' => __('Sau »', 'textdomain'),
+                )); ?>
+            </div>
+
+        <?php else : ?>
+
+            <div class="search-no-results">
+                <h2 class="search-no-results-title">
+                    <span class="search-no-results-label">Search:</span> "<?php echo esc_html(get_search_query()); ?>"
+                </h2>
+                <p class="search-no-results-message">
+                    We could not find any results for your search. You can give it
+                    another try through the search form below.
+                </p>
+                <?php get_search_form(); ?>
+            </div>
+
+        <?php endif; ?>
+
+    </div> </main>
 
 		<aside class="cot-phai recent-comments">
 			<h3 class="sidebar-title">Bình luận gần đây</h3>
@@ -308,6 +312,42 @@
 <style>
 	/* ====== Trang tìm kiếm ====== */
 
+	.search-no-results {
+    text-align: center; /* Căn giữa mọi thứ */
+    padding: 40px 20px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.search-no-results-title {
+    font-size: 24px; /* Kích thước chữ như hình */
+    font-weight: bold;   /* In đậm cả dòng */
+    color: #000;         /* Màu đen cho query và dấu ngoặc kép */
+    margin: 0 0 20px 0;
+}
+
+.search-no-results-label {
+    color: #D90000; /* Màu đỏ cho chữ "Search:" */
+}
+
+.search-no-results-message {
+    font-size: 16px;
+    color: #555; /* Màu xám đậm cho mô tả */
+    margin-bottom: 30px;
+    max-width: 450px; /* Giới hạn chiều rộng cho đẹp */
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+}
+
+/* Tùy chỉnh form tìm kiếm bên trong */
+.search-no-results .search-form {
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
 	/* ====== Trang chủ ====== */
 	.trang-chu {
 		display: grid;

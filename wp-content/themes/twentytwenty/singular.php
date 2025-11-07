@@ -27,6 +27,7 @@ get_header();
 						<!-- 1. Tiêu đề bài viết (Đẩy sang trái) -->
 						<h1 class="post-title"><?php the_title(); ?></h1>
 
+						
 						<!-- 2. Khối ngày tháng hình tròn (lớn, màu vàng - Đẩy sang phải) -->
 						<div class="post-meta">
 							<span class="post-date" aria-hidden="false">
@@ -42,7 +43,7 @@ get_header();
 							</span>
 						</div>
 					</div>
-
+					<div class="post-divider-arrow"></div>
 					<div class="post-content">
 						<?php the_content(); ?>
 					</div>
@@ -59,43 +60,57 @@ get_header();
 
 	<!-- Cột phải: Bài viết gần đây (Background màu xanh ngọc/teal) -->
 	<aside class="right-sidebar">
-		<h3 class="sidebar-title">Bài viết gần đây</h3>
-		<?php
-		$recent_posts = wp_get_recent_posts(array(
-			'numberposts' => 5,
-			'post_status' => 'publish',
-		));
-		foreach ($recent_posts as $p) {
-			// Lấy ngày, tháng, năm riêng biệt
-			$post_day = get_the_date('d', $p['ID']);
-			$post_month = get_the_date('m', $p['ID']);
-			$post_year = get_the_date('y', $p['ID']);
+    <h3 class="sidebar-title">Bài viết gần đây</h3>
+    <?php
+    // BƯỚC 1: Thay đổi số lượng bài viết thành 3
+    $recent_posts = wp_get_recent_posts(array(
+        'numberposts' => 3, // <-- Đã đổi từ 5 thành 3
+        'post_status' => 'publish',
+    ));
 
-			echo '<div class="latest-post-item">';
+    // BƯỚC 2: (Giữ nguyên) Lấy URL của trang blog chính
+    $blog_page_id = get_option('page_for_posts');
+    // Nếu không set trang bài viết, thì link về trang chủ
+    $blog_page_url = $blog_page_id ? get_permalink($blog_page_id) : home_url('/');
 
-			// CẬP NHẬT PHP: Sử dụng cấu trúc tương tự khối lớn nhưng với class riêng
-			echo '<div class="latest-post-meta-box">';
-			echo '<span class="latest-post-date-circle" aria-hidden="false">';
-			echo '<div class="latest-date-inner">';
-			echo '<div class="latest-day-month">';
-			echo '<span class="latest-day">' . $post_day . '</span>';
-			// Sử dụng divider mini
-			echo '<span class="latest-divider"></span>';
-			echo '<span class="latest-month">' . $post_month . '</span>';
-			echo '</div>'; // End latest-day-month
-			echo '<span class="latest-year">' . $post_year . '</span>';
-			echo '</div>'; // End latest-date-inner
-			echo '</span>'; // End latest-post-date-circle
-			echo '</div>'; // End latest-post-meta-box
+    // Vòng lặp 3 bài viết
+    foreach ($recent_posts as $p) {
+        // Lấy ngày, tháng, năm riêng biệt
+        $post_day = get_the_date('d', $p['ID']);
+        $post_month = get_the_date('m', $p['ID']);
+        $post_year = get_the_date('y', $p['ID']);
 
-			echo '<div class="latest-post-content">';
-			echo '<a href="' . get_permalink($p['ID']) . '">' . esc_html($p['post_title']) . '</a>';
-			echo '</div>'; // End latest-post-content
+        echo '<div class="latest-post-item">';
 
-			echo '</div>';
-		}
-		?>
-	</aside>
+        // ... (Toàn bộ code echo cho meta box và content của bạn) ...
+        echo '<div class="latest-post-meta-box">';
+        echo '<span class="latest-post-date-circle" aria-hidden="false">';
+        echo '<div class="latest-date-inner">';
+        echo '<div class="latest-day-month">';
+        echo '<span class="latest-day">' . $post_day . '</span>';
+        echo '<span class="latest-divider"></span>';
+        echo '<span class="latest-month">' . $post_month . '</span>';
+        echo '</div>'; // End latest-day-month
+        echo '<span class="latest-year">' . $post_year . '</span>';
+        echo '</div>'; // End latest-date-inner
+        echo '</span>'; // End latest-post-date-circle
+        echo '</div>'; // End latest-post-meta-box
+
+        echo '<div class="latest-post-content">';
+        echo '<a href="' . get_permalink($p['ID']) . '">' . esc_html($p['post_title']) . '</a>';
+        echo '</div>'; // End latest-post-content
+
+        echo '</div>';
+    }
+
+    // BƯỚC 3: Thêm "thanh" (nút) "Xem chi tiết"
+    // Nó sẽ tự động link đến trang "Bài viết" của bạn
+    echo '<div class="sidebar-view-all">';
+    echo '<a href="' . esc_url($blog_page_url) . '" class="view-all-button">Xem chi tiết</a>';
+    echo '</div>';
+
+    ?>
+</aside>
 </div>
 
 <!-- Phần điều hướng bài viết trước/sau (GỌI TEMPLATE MỚI) -->
@@ -167,16 +182,52 @@ get_header();
 		padding-bottom: 5px;
 	}
 
+	/* Tìm đoạn CSS này */
 	.post-header {
-		border-bottom: 2px solid #ddd;
-		padding-bottom: 15px;
-		margin-bottom: 20px;
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		justify-content: space-between;
-		gap: 20px;
-	}
+    /* border-bottom: 2px solid #ddd; */   /* <-- XÓA DÒNG NÀY */
+    padding-bottom: 15px;
+    /* margin-bottom: 20px; */        /* <-- XÓA DÒNG NÀY */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+/* --- CSS MỚI CHO DẢI PHÂN CÁCH TAM GIÁC --- */
+/* --- CSS CẬP NHẬT: DẢI XÁM DÀY + MŨI TÊN CHỈ XUỐNG --- */
+
+/* 1. Dải xám (lấy style từ hình mới) */
+.post-divider-arrow {
+    position: relative;
+    height: 2px; /* <-- Quay lại đường kẻ mỏng */
+    background-color: #ddd; /* Màu đường kẻ */
+    margin-bottom: 20px;
+    border-radius: 0; /* Bỏ bo góc */
+}
+
+/* 2. Mũi tên (Dùng kỹ thuật "đục lỗ" và "vẽ lại") */
+.post-divider-arrow::after {
+    content: '';
+    position: absolute;
+    width: 14px;  /* Kích thước của chữ V */
+    height: 14px; /* Kích thước của chữ V */
+    
+    /* BẮT BUỘC: Màu này phải giống hệt màu nền của trang web 
+       (ví dụ: .content-area) để "đục lỗ" đường kẻ */
+    background: #fff; 
+    
+    left: 10%; /* Vị trí bạn muốn */
+    top: -6px; /* Đẩy nó lên để tâm nằm trên đường kẻ */
+    
+    /* Xoay 45 độ để tạo hình kim cương */
+    transform: translateX(-50%) rotate(45deg); 
+    
+    /* Vẽ lại 2 cạnh dưới của kim cương (tạo thành chữ V) */
+    border-bottom: 2px solid #ddd;
+    border-right: 2px solid #ddd;
+}
+
+/* --- HẾT CSS MỚI --- */
 
 	.single-post .post-title {
 		flex-grow: 1;
@@ -498,6 +549,44 @@ get_header();
 	.left-sidebar .category-list li a:hover {
 		color: #0073aa;
 	}
+	/* --- CSS MỚI CHO NÚT "XEM TẤT CẢ" (GIỐNG HÌNH) --- */
+
+.sidebar-view-all {
+    /* Sử dụng margin âm để "phá vỡ" padding: 15px của .right-sidebar.
+     Nó sẽ kéo thanh này ra sát viền trái, phải và đáy của sidebar.
+    */
+    margin: 20px -15px -15px -15px;
+}
+
+.view-all-button {
+    display: block; /* Cho nó chiếm cả 1 dòng */
+    width: 100%;    /* Chiều rộng 100% */
+    
+    /* Màu sắc và chữ giống trong hình */
+    background-color: #5dbbb2; /* Màu xanh teal/ngọc */
+    color: #fff;
+    text-transform: uppercase; /* VIẾT HOA */
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center;
+    
+    padding: 12px 15px; /* Tăng chiều cao cho thanh */
+    
+    /* Bỏ các style link mặc định */
+    text-decoration: none;
+    border: none;
+    
+    /* Quan trọng: .right-sidebar cha có border-radius: 8px.
+     Chúng ta phải làm tròn 2 góc dưới của thanh này để nó khớp.
+    */
+    border-radius: 0 0 8px 8px; 
+    
+    transition: background-color 0.3s ease;
+}
+
+.view-all-button:hover {
+    background-color: #4caa9f; /* Màu đậm hơn một chút khi hover */
+}
 </style>
 
 <?php get_footer(); ?>

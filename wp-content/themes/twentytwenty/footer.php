@@ -95,7 +95,7 @@
 	}
 
 	#footer ul.social li a i {
-		font-size: 40px;
+		font-size: 20px;
 		/* Larger icon size */
 		transition: 0.3s ease-in-out;
 	}
@@ -106,7 +106,7 @@
 	}
 
 	#footer ul.social li:hover a i {
-		font-size: 50px;
+		font-size: 30px;
 		/* Icon grows on hover */
 		margin-top: -5px;
 		/* Optional slight shift for effect */
