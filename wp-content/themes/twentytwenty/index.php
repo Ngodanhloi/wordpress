@@ -75,12 +75,102 @@
 				<?php endif; ?>
 
 			</div>
-		</main>
+		</main>	
 
-		<aside class="right-sidebar-empty">
-			<?php // 
-			?>
+		<aside class="cot-phai recent-comments">
+			<h3 class="sidebar-title">Bình luận gần đây</h3>
+			<?php
+            // BƯỚC 1: LẤY 5 BÌNH LUẬN GỐC MỚI NHẤT
+            $binh_luan_moi = get_comments(array(
+                'number' => 5,
+                'status' => 'approve',
+                'parent' => 0, // Chỉ lấy bình luận gốc
+            ));
+
+            if ($binh_luan_moi) {
+
+                echo '<ul class="comment-list">';
+
+                // BƯỚC 2: LẶP QUA TỪNG BÌNH LUẬN GỐC
+                foreach ($binh_luan_moi as $bl) {
+                    
+                    $link_binh_luan = get_comment_link($bl->comment_ID);
+                    $comment_snippet = wp_trim_words($bl->comment_content, 15, '...');
+
+                    // 1. Mở thẻ <li> cho bình luận GỐC
+                    echo '<li class="comment">'; 
+
+                    // 2. Hiển thị Avatar GỐC
+                    echo '<div class="comment-avatar">';
+                    echo get_avatar($bl, 48); // 48px
+                    echo '</div>';
+
+                    // 3. Hiển thị Body GỐC
+                    echo '<div class="comment-body">';
+                    
+                        echo '<div class="comment-header">';
+                        echo '<span class="comment-author">' . esc_html($bl->comment_author) . '</span>';
+                        echo '</div>'; 
+
+                        echo '<div class="comment-content">';
+                        echo '<a href="' . esc_url($link_binh_luan) . '">' . esc_html($comment_snippet) . '</a>';
+                        echo '</div>';
+
+                    // BƯỚC 3: TRUY VẤN VÀ HIỂN THỊ CÁC PHẢN HỒI (CON)
+                    $args_con = array(
+                        'parent' => $bl->comment_ID, // Lấy con của bình luận này
+                        'status' => 'approve',
+                        'orderby' => 'comment_date',
+                        'order' => 'ASC' // Hiển thị con từ cũ -> mới
+                    );
+                    $binh_luan_con = get_comments($args_con);
+
+                    if ($binh_luan_con) {
+                        // Mở danh sách con
+                        echo '<ul class="children">'; 
+                        
+                        foreach ($binh_luan_con as $bl_con) {
+                            $link_con = get_comment_link($bl_con->comment_ID);
+                            $snippet_con = wp_trim_words($bl_con->comment_content, 10, '...'); // Trích dẫn con ngắn hơn
+
+                            // Mở thẻ <li> cho bình luận CON
+                            echo '<li class="comment">';
+                            
+                            // Avatar CON (nhỏ hơn)
+                            echo '<div class="comment-avatar">';
+                            echo get_avatar($bl_con, 36); // 36px
+                            echo '</div>';
+
+                            // Body CON
+                            echo '<div class="comment-body">';
+                                echo '<div class="comment-header">';
+                                echo '<span class="comment-author">' . esc_html($bl_con->comment_author) . '</span>';
+                                echo '</div>'; 
+                                echo '<div class="comment-content">';
+                                echo '<a href="' . esc_url($link_con) . '">' . esc_html($snippet_con) . '</a>';
+                                echo '</div>';
+                            echo '</div>'; // Đóng body con
+                            
+                            echo '</li>'; // Đóng <li> con
+                        }
+                        
+                        echo '</ul>'; // Đóng danh sách con
+                    }
+                    
+                    // --- KẾT THÚC PHẦN HIỂN THỊ CON ---
+
+                    echo '</div>'; // Đóng body gốc
+                    echo '</li>'; // Đóng <li> gốc
+                } // Hết vòng lặp foreach gốc
+
+                echo '</ul>';
+            } else {
+
+                echo '<p>Chưa có bình luận nào.</p>';
+            }
+            ?>
 		</aside>
+
 
 	</div> <?php // 
 			?>
@@ -547,6 +637,214 @@
 		clear: both;
 		/* Đảm bảo nó nằm dưới cả title và date */
 	}
+	/* ================================================== */
+/* --- GIAO DIỆN BÌNH LUẬN MỚI (THEO HÌNH 23f91f) --- */
+/* ================================================== */
+
+/* 1. Áp dụng cho cả 2 cột bên phải (Trang chủ & Tìm kiếm) */
+/* ================================================== */
+/* --- GIAO DIỆN BÌNH LUẬN (KIỂU BONG BÓNG CHAT) --- */
+/* ================================================== */
+
+/* 1. KHUNG CHÍNH */
+.recent-comments {
+    font-family: "Segoe UI", Arial, sans-serif;
+    --avatar-size: 48px;
+    --reply-avatar-size: 36px;
+    --gap: 12px; /* Khoảng cách avatar và nội dung */
+    --content-width: calc(100% - var(--avatar-size) - var(--gap));
+}
+
+/* 2. TIÊU ĐỀ */
+.recent-comments .sidebar-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    border-bottom: 2px solid #f2f2f2;
+    padding-bottom: 8px;
+}
+
+/* 3. DANH SÁCH */
+.recent-comments .comment-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* 4. BÌNH LUẬN GỐC (CHA) */
+.recent-comments li.comment {
+    display: flex; 
+    align-items: flex-start; 
+    gap: var(--gap); 
+    padding: 10px 0; /* Khoảng cách giữa các bình luận */
+    width: 100%; 
+    box-sizing: border-box; 
+    position: relative;
+    
+    /* Đảm bảo nền trong suốt (không phải hộp xám) */
+    background-color: transparent;
+    border-top: none;
+    border-radius: 0;
+    margin: 0;
+}
+.recent-comments li.comment:first-child {
+    padding-top: 0;
+}
+
+/* 5. AVATAR GỐC */
+.recent-comments .comment-avatar { 
+    flex: 0 0 var(--avatar-size); 
+    width: var(--avatar-size);
+}
+.recent-comments .comment-avatar img { 
+    width: var(--avatar-size); 
+    height: var(--avatar-size); 
+    object-fit: cover; 
+    border-radius: 4px; /* Bo góc 4px */
+}
+
+/* 6. BODY (BÊN PHẢI) */
+.recent-comments .comment-body { 
+    flex: 1; 
+    max-width: var(--content-width);
+    box-sizing: border-box;
+}
+
+/* 7. HEADER (KHUNG XÁM CHỨA TÊN) */
+.recent-comments .comment-header { 
+    position: relative; 
+    background: #efefef; /* <-- NỀN XÁM */
+    border: 1px solid #d0d0d0; /* <-- VIỀN XÁM */
+    border-radius: 4px 4px 0 0; 
+    padding: 8px 12px; 
+    margin: 0; 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    gap: 8px; 
+}
+
+/* 8. MŨI NHỌN (TAM GIÁC) */
+.recent-comments .comment-header::before { 
+    display: block; /* Đảm bảo nó hiển thị */
+    content: ""; 
+    position: absolute; 
+    left: -9px; 
+    top: 10px; /* Căn lề 1 chút */
+    width: 0; height: 0; 
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 8px solid #d0d0d0; /* Màu viền */
+}
+.recent-comments .comment-header::after { 
+    display: block; /* Đảm bảo nó hiển thị */
+    content: ""; 
+    position: absolute; 
+    left: -8px; 
+    top: 11px;
+    width: 0; height: 0; 
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-right: 7px solid #efefef; /* Màu nền xám */
+}
+
+/* 9. TÊN TÁC GIẢ */
+.recent-comments .comment-author { 
+    font-weight: 700; 
+    font-size: 14px; 
+    color: #222; 
+    display: block; 
+    flex: 1; 
+    min-width: 0; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    white-space: nowrap; 
+}
+
+/* 10. NỘI DUNG (KHUNG TRẮNG) */
+.recent-comments .comment-content { 
+    background: #fff; /* <-- NỀN TRẮNG */
+    border: 1px solid #dcdcdc; /* <-- VIỀN */
+    border-radius: 0 0 4px 4px; 
+    padding: 10px 12px; 
+    color: #6f6f6f; 
+    font-size: 14px; 
+    line-height: 1.6; 
+    margin: 0; 
+    border-top: none; 
+}
+.recent-comments .comment-content a {
+    color: inherit;
+    text-decoration: none;
+}
+.recent-comments .comment-content a:hover {
+    text-decoration: underline;
+}
+
+/* ==================================== */
+/* --- PHẦN PHẢN HỒI (CON) --- */
+/* ==================================== */
+
+/* 11. DANH SÁCH PHẢN HỒI (CON) */
+.recent-comments .children {
+    list-style: none;
+    margin: 10px 0 0 0; /* Khoảng cách với bình luận cha */
+    padding: 10px 0 0 0; 
+    border-top: 1px dashed #eee; /* Gạch đứt ngăn cách */
+}
+
+/* 12. MỖI PHẢN HỒI (CON) */
+.recent-comments .children li.comment {
+    /* Ghi đè gap cho avatar nhỏ hơn */
+    --gap: 10px; 
+    padding-bottom: 10px;
+    padding-top: 0;
+}
+
+/* 13. AVATAR CON (NHỎ HƠN) */
+.recent-comments .children .comment-avatar {
+    --avatar-size: 36px;
+}
+.recent-comments .children .comment-avatar img {
+    width: 36px;
+    height: 36px;
+}
+
+/* 14. BODY CON */
+.recent-comments .children .comment-body {
+     max-width: calc(100% - var(--reply-avatar-size) - var(--gap));
+}
+
+/* 15. HEADER/MŨI NHỌN CHO CON */
+.recent-comments .children .comment-header { 
+    padding: 6px 8px; 
+    background: #f0f0f0; 
+    border: 1px solid #d6d6d6; 
+}
+.recent-comments .children .comment-header::before { 
+    left: -8px; 
+    top: 7px;
+    border-top: 7px solid transparent; 
+    border-bottom: 7px solid transparent; 
+    border-right: 7px solid #d6d6d6; 
+}
+.recent-comments .children .comment-header::after { 
+    left: -7px; 
+    top: 8px;
+    border-top: 6px solid transparent; 
+    border-bottom: 6px solid transparent; 
+    border-right: 6px solid #f0f0f0; 
+}
+
+/* 16. TÊN/NỘI DUNG CON (NHỎ HƠN) */
+.recent-comments .children .comment-author {
+    font-size: 14px;
+    font-weight: 600;
+}
+.recent-comments .children .comment-content {
+    font-size: 14px;
+    color: #666;
+}
 </style>
 
 <?php get_footer(); ?>
